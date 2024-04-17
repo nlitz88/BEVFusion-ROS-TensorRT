@@ -1,13 +1,13 @@
-# 模型文件下载
+# Model File Download
 
-[文档参考](https://github.com/NVIDIA-AI-IOT/Lidar_AI_Solution/tree/master/CUDA-BEVFusion)
-- 下载模型  ( [Google Drive](https://drive.google.com/file/d/1bPt3D07yyVuSuzRAHySZVR2N15RqGHHN/view?usp=sharing) ) or ( [Baidu Drive](https://pan.baidu.com/s/1_6IJTzKlJ8H62W5cUPiSbA?pwd=g6b4) )
-- 下载测试数据集 ( [Google Drive](https://drive.google.com/file/d/1RO493RSWyXbyS12yWk5ZzrixAeZQSnL8/view?usp=sharing) ) or ( [Baidu Drive](https://pan.baidu.com/s/1ED6eospSIF8oIQ2unU9WIQ?pwd=mtvt) )
+[Document Reference](https://github.com/NVIDIA-AI-IOT/Lidar_AI_Solution/tree/master/CUDA-BEVFusion)
+- Download the model ([Google Drive](https://drive.google.com/file/d/1bPt3D07yyVuSuzRAHySZVR2N15RqGHHN/view?usp=sharing)) or ([Baidu Drive](https://pan.baidu.com/s/1_6IJTzKlJ8H62W5cUPiSbA?pwd=g6b4))
+- Download the test dataset ([Google Drive](https://drive.google.com/file/d/1RO493RSWyXbyS12yWk5ZzrixAeZQSnL8/view?usp=sharing)) or ([Baidu Drive](https://pan.baidu.com/s/1ED6eospSIF8oIQ2unU9WIQ?pwd=mtvt))
 
 
-1. 模型下载解压后复制到`BEVFusion-ROS-TensorRT`目录中，目录结果如下：
+1. After downloading and unzipping the model, copy it to the `BEVFusion-ROS-TensorRT` directory. The directory structure is as follows:
 
-~~~c
+~~~
 (base) lin@PC:src/BEVFusion-ROS-TensorRT/model$ tree
 .
 ├── resnet50
