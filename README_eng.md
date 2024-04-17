@@ -81,11 +81,10 @@ set(TensorRT_LIBS ${TensorRT_ROOT}/lib/)
 
 + modify the values of `model_name` and `precision` in `bevfusion_node.launch`
 
-Note that the following models cannot be executed:
-
 - `model_name: resnet50/resnet50int8/swint`
 - `precision:  fp16/int8`
-- `swint + int8`
+
+Note that `swint + int8` does not work.
 
 ~~~python
 # 1. build
