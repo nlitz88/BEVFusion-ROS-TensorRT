@@ -5,47 +5,50 @@ This repository contains source code and models for BEVFusion online real-time i
 ![](configs/cuda-bevfusion.gif)
 
 
-# 1 依赖安装
+# 1 Dependencies Installation
 
-+ **`ubuntu-20.04,galactic,cuda-11.3, cudnn-8.6.0, TensorRT-8.5`**
+1. assuming that the following are installed:
 
-1. 默认已安装`galactic, cuda, cudnn`, 已下载`TensorRT`源码
+- Ubuntu 20.04
+- ROS2 galactic
+- cuda 11.3
+- cudnn 8.6.0
+- TensorRT 8.5 (source code)
 
-2. `ros`依赖
+2. set up `rosdep`:
 
 ~~~python
-# 1. 建立ros工作空间
+# 1. create ros workspace
 mkdir -p bevfusion_ws/src
 
-# 2. 进入bevfusion_ws/src目录，拉取源码
+# 2. go into bevfusion_ws/src directory and pull the repo
 cd bevfusion_ws/src
-git clone https://github.com/linClubs/BEVFusion-ROS-TensorRT.git 
+git clone https://github.com/linClubs/BEVFusion-ROS-TensorRT.git
 
-# 3. 切换galactic-devel分支
+# 3. switch to galactic-devel branch
 git branch galactic-devel
 
-# 4. 进入bevfusion_ws工作空间一键安装功能包需要ros依赖
-cd ../ 
+# 4. use rosdep to install dependencies in src
+cd .. 
 rosdep install -r -y --from-paths src --ignore-src --rosdistro $ROS_DISTRO
 ~~~
 
-3. [模型下载参考](https://github.com/linClubs/BEVFusion-ROS-TensorRT/blob/main/model/readme.md)
+3. To download pretrained models, check out [model download readme](https://github.com/linClubs/BEVFusion-ROS-TensorRT/blob/main/model/readme.md)
 
-4. [模型导出参考](https://github.com/NVIDIA-AI-IOT/Lidar_AI_Solution/blob/master/CUDA-BEVFusion/qat/README.md)
+4. To output a pytorch model, check out [model output readme](https://github.com/NVIDIA-AI-IOT/Lidar_AI_Solution/blob/master/CUDA-BEVFusion/qat/README.md)
 
-5. `rosbag`准备
++ Modify the path of `cuda tensorrt cudnn` in `./tool/environment.sh` and run `./tool/build_trt_engine.sh` to generate TensorRT inference model.
 
-+ `bevfusion`官方提供了已训练好的`nuscenes`模型参数
-+ `nuscenes`传感器之间的参数已给出,无需标定 
-
-如果需接真实的传感器进行场景测试,需提前完成**训练**和**标定**工作
-
-[传感器标定参考](https://github.com/linClubs/Calibration-Is-All-You-Need)
+~~~python
+./tool/build_trt_engine.sh
+~~~
 
 
-[`nuscenes2rosbag`](https://github.com/linClubs/nuscenes2rosbag)
+5. `rosbag` preparation
 
-+ 上面生成的是`ros1`的`bag`，直接使用`rosbags`转化成`ros2`的`bag`
++ The official `bevfusion` repo provides pretrained `nuscenes` models
+
++ To convert the rosbag data to the format used by this repo's `galactic-devel` branch, use ROS2 `rosbags` from `pip`:
 
 ~~~python
 # 1. install rosbags
@@ -55,35 +58,44 @@ pip install rosbags
 rosbags-convert nuscenes-103.bag
 ~~~
 
++ The sensor parameters in `nuscenes` are fixed and no calibration is required 
 
+However, if you want to hook up real sensors to test your scenarios, you need to **train** a new model and **calibrate** your sensors prior to using this repo.
 
-# 2 编译运行
+For sensor calibration, check out this [sensor calibration repo](https://github.com/linClubs/Calibration-Is-All-You-Need)
 
-1. 编译前需要修改`CMakeLists.txt`中`TensorRT`和`CUDA`路径,修改如下
+# 2 Build & Launch
+
+1. Before building, modify the paths of `TensorRT` and `CUDA` in `CMakeLists.txt`:
 
 ~~~python
 ...
 # cuda
-set(CUDA_TOOLKIT_ROOT_DIR /usr/local/cuda-11.3) # CUDA修改这一行
+set(CUDA_TOOLKIT_ROOT_DIR /usr/local/cuda-11.3) # CUDA line to change
 set(CUDA_INSTALL_TARGET_DIR targets/x86_64-linux)
 set(CUDA_INCLUDE_DIRS ${CUDA_TOOLKIT_ROOT_DIR}/${CUDA_INSTALL_TARGET_DIR}/include)
 set(CUDA_LIBS ${CUDA_TOOLKIT_ROOT_DIR}/${CUDA_INSTALL_TARGET_DIR}/lib)
 
 # TENSORRT
-set(TensorRT_ROOT ~/software/TensorRT-8.5.3.1)  # TensorRT修改这一行
+set(TensorRT_ROOT /home/lin/software/TensorRT-8.5.3.1)  # TensorRT line to change
 # set(TensorRT_ROOT ~/share/TensorRT-8.5.3.1)           
 set(TensorRT_INCLUDE_DIRS ${TensorRT_ROOT}/include)
 set(TensorRT_LIBS ${TensorRT_ROOT}/lib/)
 ...
 ~~~
 
-2. 编译运行
+2. Build & launch
 
-+ `bevfusion.launch.py`修改`model_name`与`precision`参数值
++ modify the values of `model_name` and `precision` in `bevfusion_node.launch`
+
+- `model_name: resnet50/resnet50int8/swint`
+- `precision:  fp16/int8`
+
+Note that `swint + int8` does not work.
+
 ~~~python
 # model_name: resnet50/resnet50int8/swint
 # precision:  fp16/int8
-# swint + int8模式不能工作
 parameters=[
 			{'model_name': 'resnet50'},
 			{'precision' : 'int16'}
@@ -91,39 +103,39 @@ parameters=[
 ~~~
 
 ~~~python
-# 1. 编译
+# 1. build
 colcon build --symlink-install
 
-# 2. source工作空间
+# 2. source your workspace
 source install/setup.bash
 
-# 3. 运行bevfusion_node
+# 3. launch bevfusion_node
 ros2 launch bevfusion bevfusion.launch.py
 
-# 4. 播放数据集
+# 4. play the rosbag
  ros2 bag play nuscenes-103.db3
 
-# 5 rviz2结果显示
+# 5 display the result in rviz2
 rviz2 -d src/BEVFusion-ROS-TensorRT/launch/view.rviz
 ~~~
 
 ---
 
-3. 错误修改
-+ 报错1 运行报错`tool/simhei.ttf`找不到, 全局搜索`tool/simhei.ttf`或者`UseFont`关键字
+3. Error Fixes
 
-修改：在`/src/common/visualize.cu`中修改`UseFont`的值即可,改成`simhei.ttf`正确的路径即可
++ Error 1
+if an error pops up during your launch saying " cannot find `tool/simhei.ttf`", search keywords `tool/simhei.ttf` or `UseFont` in your workspace and modify the value of `UseFont` in `/src/common/visualize.cu` to the correct path to `simhei.ttf`
 
 
-+ 报错2 运行`ros2 run bevfusion bevfusion_node` 
-`error while loading shared libraries: libspconv.so: cannot open shared object file: No such file or directory`
++ Error 2
+When running `ros2 run bevfusion bevfusion_node`, if you see `error while loading shared libraries: libspconv.so: cannot open shared object file: No such file or directory`
 
-修改：
+Fix：
 ~~~python
-# 查看LD_LIBRARY_PATH路径
+# echo LD_LIBRARY_PATH
 echo $LD_LIBRARY_PATH
 
-# 如果没有libspconv.so路径就按照下面代码添加即可
+# if libspconv.so path is missing, add it by running the following command in terminal
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/third_party/3DSparseConvolution/libspconv/lib/x86_64
 ~~~
 
@@ -135,4 +147,4 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/third_party/3DSparseConvolution
 + [Lidar_AI_Solution](https://github.com/NVIDIA-AI-IOT/Lidar_AI_Solution)
 
 
-+ bev感知交流群-472648720, 欢迎各位小伙伴进群一起学习讨论bev相关知识！！！^_^
++ bev perception QQ group - 472648720, join us to learn bev related cool stuff！！！^_^
