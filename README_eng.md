@@ -48,6 +48,9 @@ rosdep install -r -y --from-paths src --ignore-src --rosdistro $ROS_DISTRO
 
 + The official `bevfusion` repo provides pretrained `nuscenes` models
 
++ To convert the sample nuscenes data to a rosbag for use with this package's node, check out [`nuscenes2rosbag` package](https://github.com/linClubs/nuscenes2rosbag)
+
+
 + To convert the rosbag data to the format used by this repo's `galactic-devel` branch, use ROS2 `rosbags` from `pip`:
 
 ~~~python
