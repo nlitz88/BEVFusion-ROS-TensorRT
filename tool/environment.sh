@@ -24,23 +24,26 @@
 
 # export TensorRT_Lib=/path/to/TensorRT/lib
 # export TensorRT_Inc=/path/to/TensorRT/include
-# export TensorRT_Bin=/path/to/TensorRT/bin
+# export TensorRT_Bin=/path/to/TTensorRT_LibensorRT/bin
 
 # export TensorRT_Lib=/home/lin/software/TensorRT-8.2.1.8/lib
 # export TensorRT_Inc=/home/lin/software/TensorRT-8.2.1.8/include
 # export TensorRT_Bin=/home/lin/software/TensorRT-8.2.1.8/bin
 
-export TensorRT_Lib=/home/lin/software/TensorRT-8.5.3.1/lib
-export TensorRT_Inc=/home/lin/software/TensorRT-8.5.3.1/include
-export TensorRT_Bin=/home/lin/software/TensorRT-8.5.3.1/bin
+# export TensorRT_Lib=/workspaces/isaac_ros-dev/18744/TensorRT-8.5.3.1/lib
+# export TensorRT_Inc=/workspaces/isaac_ros-dev/18744/TensorRT-8.5.3.1/include
+# export TensorRT_Bin=/workspaces/isaac_ros-dev/18744/TensorRT-8.5.3.1/bin/
+
+export TensorRT_Lib=/usr/lib/x86_64-linux-gnu/
+export TensorRT_Inc=/usr/include/x86_64-linux-gnu/
+export TensorRT_Bin=/usr/src/tensorrt/bin/
 
 export CUDA_Lib=/usr/local/cuda/lib64
 export CUDA_Inc=/usr/local/cuda/include
 export CUDA_Bin=/usr/local/cuda/bin
 export CUDA_HOME=/usr/local/cuda
 
-export CUDNN_Lib=/usr/local/cuda/lib64
-
+export CUDNN_Lib=/usr/lib/x86_64-linux-gnu/
 
 # 选择模型3种：resnet50/resnet50int8/swint
 
