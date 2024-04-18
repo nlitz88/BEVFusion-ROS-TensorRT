@@ -11,8 +11,8 @@ def generate_launch_description():
 		
 		# 参数列表
 		parameters=[
-			{'model_name': 'resnet50'},
-			{'precision' : 'int16'}
+			{'model_name': 'resnet50int8'},
+			{'precision' : 'int8'}
 		]
 	)
 
