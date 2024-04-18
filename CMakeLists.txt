@@ -56,6 +56,18 @@ if(BUILD_TESTING)
 endif()
 ament_package()
 
+# cuda
+set(CUDA_TOOLKIT_ROOT_DIR $ENV{CUDA_HOME}) # CUDA line to change
+set(CUDA_INSTALL_TARGET_DIR targets/x86_64-linux)
+set(CUDA_INCLUDE_DIRS ${CUDA_TOOLKIT_ROOT_DIR}/${CUDA_INSTALL_TARGET_DIR}/include)
+set(CUDA_LIBS ${CUDA_TOOLKIT_ROOT_DIR}/${CUDA_INSTALL_TARGET_DIR}/lib)
+
+# TENSORRT
+set(TensorRT_ROOT /home/lin/software/TensorRT-8.5.3.1)  # TensorRT line to change
+# set(TensorRT_ROOT ~/share/TensorRT-8.5.3.1)           
+set(TensorRT_INCLUDE_DIRS $ENV{TensorRT_Inc})
+set(TensorRT_LIBS $ENV{TensorRT_Lib})
+
 include_directories(
   ${TensorRT_INCLUDE_DIRS}
   ${Protobuf_INCLUDE_DIRS}

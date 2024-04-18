@@ -68,6 +68,14 @@ For sensor calibration, check out this [sensor calibration repo](https://github.
 
 1. Before building, modify the paths of `TensorRT` and `CUDA` in `CMakeLists.txt`:
 
+TODO: THE BELOW SHOULD ALREADY BE IN THE CMAKELISTS FILE, and instead, you can
+just run the `environment.sh` script in your current bash session using `source
+environment.sh` -- this will define all the environment variables specified in
+the `environment.sh` file that the CMakeLists file needs.
+
+So basically, just make sure to run `environment.sh` before you colcon build
+anything.
+
 ~~~python
 ...
 # cuda
