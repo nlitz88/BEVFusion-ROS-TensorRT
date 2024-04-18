@@ -34,16 +34,25 @@
 # export TensorRT_Inc=/workspaces/isaac_ros-dev/18744/TensorRT-8.5.3.1/include
 # export TensorRT_Bin=/workspaces/isaac_ros-dev/18744/TensorRT-8.5.3.1/bin/
 
+# These paths should work for the PyTorch 22.09-py3 NGC container (and probably
+# other image versions) -- where libcudnn and tensorrt have their include and
+# lib folders installed in the /usr/lib and /usr/include directories. More
+# generally, these are the directories that you should find the library binaries
+# and header files in IF YOU INSTALL TENSORRT AND LIBCUDNN USING THE DEB or via
+# apt. If you install them using the tar files, you will have to adjust these
+# paths to wherever you extracted those tar files to!
 export TensorRT_Lib=/usr/lib/x86_64-linux-gnu/
 export TensorRT_Inc=/usr/include/x86_64-linux-gnu/
 export TensorRT_Bin=/usr/src/tensorrt/bin/
+
+export CUDNN_Lib=/usr/lib/x86_64-linux-gnu/
 
 export CUDA_Lib=/usr/local/cuda/lib64
 export CUDA_Inc=/usr/local/cuda/include
 export CUDA_Bin=/usr/local/cuda/bin
 export CUDA_HOME=/usr/local/cuda
 
-export CUDNN_Lib=/usr/lib/x86_64-linux-gnu/
+
 
 # 选择模型3种：resnet50/resnet50int8/swint
 
