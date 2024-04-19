@@ -30,16 +30,16 @@
 # export TensorRT_Inc=/home/lin/software/TensorRT-8.2.1.8/include
 # export TensorRT_Bin=/home/lin/software/TensorRT-8.2.1.8/bin
 
-export TensorRT_Lib=/home/lin/software/TensorRT-8.5.3.1/lib
-export TensorRT_Inc=/home/lin/software/TensorRT-8.5.3.1/include
-export TensorRT_Bin=/home/lin/software/TensorRT-8.5.3.1/bin
+export TensorRT_Lib=/home/chig/TensorRT/TensorRT-8.5.3.1/lib
+export TensorRT_Inc=/home/chig/TensorRT/TensorRT-8.5.3.1/include
+export TensorRT_Bin=/home/chig/TensorRT/TensorRT-8.5.3.1/bin
 
-export CUDA_Lib=/usr/local/cuda/lib64
-export CUDA_Inc=/usr/local/cuda/include
-export CUDA_Bin=/usr/local/cuda/bin
-export CUDA_HOME=/usr/local/cuda
+export CUDA_Lib=/usr/local/cuda-11.3/lib64
+export CUDA_Inc=/usr/local/cuda-11.3/include
+export CUDA_Bin=/usr/local/cuda-11.3/bin
+export CUDA_HOME=/usr/local/cuda-11.3
 
-export CUDNN_Lib=/usr/local/cuda/lib64
+export CUDNN_Lib=/usr/local/cuda-11.3/cudnn-linux-x86_64-8.6.0.163_cuda11-archive/lib
 
 
 # 选择模型3种：resnet50/resnet50int8/swint

@@ -13,12 +13,12 @@ int main(int argc, char** argv)
   pkg_path = "src/BEVFusion-ROS-TensorRT";
 
   // 声明参数
-  param_node->declare_parameter<std::string>("model_name", "resnet50");
+  param_node->declare_parameter<std::string>("model_name", "resnet50int8");
   
   // 从参数列表更新参数
   param_node->get_parameter("model_name", model_name);
 
-  param_node->declare_parameter<std::string>("precision", "fp16");
+  param_node->declare_parameter<std::string>("precision", "int8");
   param_node->get_parameter("precision", precision);
 
   pkg_path = ament_index_cpp::get_package_share_directory("bevfusion") + "/../../../../src/BEVFusion-ROS-TensorRT";  
