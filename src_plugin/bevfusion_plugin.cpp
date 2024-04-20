@@ -262,10 +262,12 @@ void BEVFusionNode::visualize(const std::vector<bevfusion::head::transbbox::Boun
                       const std::vector<unsigned char*> images, const nv::Tensor& lidar2image, const std::string& save_path,
                       cudaStream_t stream) 
 {
-  // 预测
+  // memory copy bboxes to Prediction vector
   std::vector<nv::Prediction> predictions(bboxes.size());
   memcpy(predictions.data(), bboxes.data(), bboxes.size() * sizeof(nv::Prediction));
 
+  // dimension adjustment to fit in input images
+  // we can come back at this once we get the correct output
   int padding = 300;
   int lidar_size = 1024;
   int content_width = lidar_size + padding * 3;
@@ -275,12 +277,17 @@ void BEVFusionNode::visualize(const std::vector<bevfusion::head::transbbox::Boun
   scene_artist_param.height = content_height;
   scene_artist_param.stride = scene_artist_param.width * 3;
 
+  // this is the data type combining lidar points and input images
+  // "scene_device_image"
   nv::Tensor scene_device_image(std::vector<int>{scene_artist_param.height, scene_artist_param.width, 3}, nv::DataType::UInt8);
   scene_device_image.memset(0x00, stream);
 
+  // get device (don't know what it does yet)
   scene_artist_param.image_device = scene_device_image.ptr<unsigned char>();
+  // create the scene
   auto scene = nv::create_scene_artist(scene_artist_param);
 
+  // these are the parameters for bev points & bboxes
   nv::BEVArtistParameter bev_artist_param;
   bev_artist_param.image_width = content_width;
   bev_artist_param.image_height = content_height;
@@ -292,18 +299,25 @@ void BEVFusionNode::visualize(const std::vector<bevfusion::head::transbbox::Boun
 
   auto points = lidar_points.to_device();
   auto bev_visualizer = nv::create_bev_artist(bev_artist_param);
-  // 添加雷达点
-  bev_visualizer->draw_lidar_points(points.ptr<nvtype::half>(), points.size(0));
-  // 添加矩形框
+  // adding lidar points (comment out)
+  // bev_visualizer->draw_lidar_points(points.ptr<nvtype::half>(), points.size(0));
+  
+  // adding bboxes (important, need to modify that)
   bev_visualizer->draw_prediction(predictions, false);
-  // 转到ego系
+  
+  // draw ego frame
   bev_visualizer->draw_ego();
+
+  // apply the point cloud to scene_device_image type
   bev_visualizer->apply(scene_device_image.ptr<unsigned char>(), stream);
 
+  // below are for drawing input camera images (comment out)
+  /*
   nv::ImageArtistParameter image_artist_param;
   image_artist_param.num_camera = images.size();
   image_artist_param.image_width = 1600;
   image_artist_param.image_height = 900;
+  
   image_artist_param.image_stride = image_artist_param.image_width * 3;
   image_artist_param.viewport_nx4x4.resize(images.size() * 4 * 4);
   memcpy(image_artist_param.viewport_nx4x4.data(), lidar2image.ptr<float>(),
@@ -339,13 +353,15 @@ void BEVFusionNode::visualize(const std::vector<bevfusion::head::transbbox::Boun
       checkRuntime(cudaStreamSynchronize(stream));
     }
     visualizer->apply(device_image.ptr<unsigned char>(), stream);
+    
 
     scene->resize_to(device_image.ptr<unsigned char>(), ox, oy, ox + camera_width, oy + camera_height, device_image.size(1),
                      device_image.size(1) * 3, device_image.size(0), 0.8f, stream);
     checkRuntime(cudaStreamSynchronize(stream));
   }
+  */
 
-  // 保存图像
+  // save the scene_device_image
   // printf("Save to %s\n", (pkg_path_ + "/configs/" + save_path).c_str());
   stbi_write_jpg((pkg_path_ + "/configs/" + save_path).c_str(), scene_device_image.size(1), scene_device_image.size(0), 3,
                  scene_device_image.to_host(stream).ptr(), 100);
