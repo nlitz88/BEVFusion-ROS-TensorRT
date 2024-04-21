@@ -56,35 +56,48 @@ std::vector<Box3DInfo> transformation_predictions(const nvtype::Float4* viewport
   const nvtype::Float3 offset_of_corners[number_of_corner] = {{-1, -1, -1}, {+1, -1, -1}, {+1, +1, -1}, {-1, +1, -1},
                                                               {-1, -1, +1}, {+1, -1, +1}, {+1, +1, +1}, {-1, +1, +1}};
 
+  // TODO: need to figure out the x, y, z axes and how they are defined through testing
   for (size_t idx_predict = 0; idx_predict < predictions.size(); ++idx_predict) {
     auto& item = predictions[idx_predict];
+
+    // rotation about z axis
     float cos_rotation = cos(item.z_rotation);
     float sin_rotation = sin(item.z_rotation);
 
+    // 3d box data type
     std::vector<nvtype::Float2> box3d;
     box3d.reserve(number_of_corner);
 
+    // this view port data determines from which camera the detection comes in
     nvtype::Float4 row0 = viewport_4x4[0];
     nvtype::Float4 row1 = viewport_4x4[1];
     nvtype::Float4 row2 = viewport_4x4[2];
+
+    // calculate z depth
     float zdepth = item.position.x * row2.x + item.position.y * row2.y + item.position.z * row2.z + row2.w;
 
     for (int idx_corner = 0; idx_corner < number_of_corner; ++idx_corner) {
       auto& offset = offset_of_corners[idx_corner];
       nvtype::Float3 corner;
       nvtype::Float3 std_corner;
+
+      // corner of a bbox definition
       std_corner.x = item.size.w * offset.x * 0.5f;
       std_corner.y = item.size.l * offset.y * 0.5f;
       std_corner.z = item.size.h * offset.z * 0.5f;
 
+      // NOTE: this is the rotation matrix multiplied with the corner
+      // TODO: change this
       corner.x = item.position.x + std_corner.x * cos_rotation + std_corner.y * sin_rotation;
       corner.y = item.position.y + std_corner.x * -sin_rotation + std_corner.y * cos_rotation;
       corner.z = item.position.z + std_corner.z;
 
+      // lastly, given from which view port (camera) this comes in, transform again
       float image_x = corner.x * row0.x + corner.y * row0.y + corner.z * row0.z + row0.w;
       float image_y = corner.x * row1.x + corner.y * row1.y + corner.z * row1.z + row1.w;
       float weight = corner.x * row2.x + corner.y * row2.y + corner.z * row2.z + row2.w;
 
+      // faulty detection handling
       if (image_x <= 0 || image_y <= 0 || weight <= 0) {
         break;
       }
@@ -356,6 +369,7 @@ class BEVArtistImplement : public BEVArtist {
   }
 
   virtual void draw_prediction(const std::vector<Prediction>& predictions, bool take_title) override {
+    // TODO: transformation, need to change that for BEV
     auto points = transformation_predictions(transform_matrix_.data(), predictions);
     size_t num = points.size();
     for (size_t i = 0; i < num; ++i)
@@ -364,6 +378,8 @@ class BEVArtistImplement : public BEVArtist {
       auto& corners = std::get<0>(item);
       auto label = std::get<1>(item);
       auto score = std::get<2>(item);
+
+      // TODO: here is the definition of edges, we need to figure out which 4 to keep
       const int idx_of_line[][2] = 
       {
           {0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7},
@@ -385,6 +401,7 @@ class BEVArtistImplement : public BEVArtist {
         cuosd_draw_line(cuosd_, p0.x, p0.y, p1.x, p1.y, 5, {name_color->r, name_color->g, name_color->b, 255});
       }
 
+      // mark titles for bboxes, don't need to change
       if (take_title) {
         size = std::max(size * 0.02f, 5.0f);
         auto title = nv::format("%s %.2f", name_color->name.c_str(), score);
