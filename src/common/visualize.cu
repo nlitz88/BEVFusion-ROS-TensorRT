@@ -352,7 +352,7 @@ class BEVArtistImplement : public BEVArtist {
       auto label = std::get<1>(item);
       auto score = std::get<2>(item);
       const int idx_of_line[][2] = {
-          {0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7},
+          {0, 1}, {1, 2}, {2, 3}, {3, 0}, // {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7},
       };
 
       float size = std::sqrt(std::pow(corners[6].x - corners[0].x, 2) + std::pow(corners[6].y - corners[0].y, 2));
@@ -382,7 +382,7 @@ class BEVArtistImplement : public BEVArtist {
       // TODO: here is the definition of edges, we need to figure out which 4 to keep
       const int idx_of_line[][2] = 
       {
-          {0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7},
+          {0, 1}, {1, 2}, {2, 3}, {3, 0}, // {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7},
       };
 
       NameAndColor* name_color = &default_name_color_;
