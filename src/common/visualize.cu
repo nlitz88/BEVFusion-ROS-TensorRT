@@ -320,7 +320,7 @@ class BEVArtistImplement : public BEVArtist {
     memset(&transform_matrix_[0], 0, sizeof(nvtype::Float4) * transform_matrix_.size());
 
     auto rotation_x = rodrigues_rotation(param.rotate_x / 180.0f * 3.141592653f, {1, 0, 0});
-    auto rotation_z = rodrigues_rotation(10.0f / 180.0f * 3.141592653f, {0, 0, 1});
+    auto rotation_z = rodrigues_rotation(param.rotate_z / 180.0f * 3.141592653f, {0, 0, 1});
     transform_matrix_ = matmul(lidar2image, matmul(rotation_x, rotation_z));
 
     checkRuntime(cudaMalloc(&transform_matrix_device_, sizeof(nvtype::Float4) * transform_matrix_.size()));

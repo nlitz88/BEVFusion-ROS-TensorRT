@@ -292,7 +292,8 @@ void BEVFusionNode::visualize(const std::vector<bevfusion::head::transbbox::Boun
   bev_artist_param.image_width = content_width;
   bev_artist_param.image_height = content_height;
   // this is where camera rotation is updated
-  bev_artist_param.rotate_x = 90.0f; // changed it from 70.0 to 90.0
+  bev_artist_param.rotate_x = 0.0f; // changed it from 70.0 to 90.0
+  bev_artist_param.rotate_z = 0.0f;
   bev_artist_param.norm_size = lidar_size * 0.5f;
   bev_artist_param.cx = content_width * 0.5f;
   bev_artist_param.cy = content_height * 0.5f;

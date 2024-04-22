@@ -88,6 +88,7 @@ struct BEVArtistParameter {
   int image_height;
   float cx, cy, norm_size;
   float rotate_x;
+  float rotate_z;
   std::vector<NameAndColor> classes;
 };
 
