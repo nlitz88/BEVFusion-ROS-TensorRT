@@ -70,7 +70,13 @@ void RosNode::callback(
   cv::resize(img, img, cv::Size(img.size().width /2, img.size().height /2));
   ImageMsg::SharedPtr msg_img_new; 
   
+  /**
+   * @brief Create a new image message AND update it's header's timestamp with
+   * the current time.
+   * 
+   */
   msg_img_new = cv_bridge::CvImage(std_msgs::msg::Header(), "bgr8", img).toImageMsg();
+  msg_img_new->header.stamp = this->now();
   
   pub_img_->publish(*msg_img_new);
 }
