@@ -159,3 +159,6 @@ RUN apt-get update && apt-get install -y \
 
 # Set the entrypoint to /bin/bash
 ENTRYPOINT ["/bin/bash"]
+
+# NOTE: If for some reason you can't get this Dockerfile to build--just use the
+# base image above and install ros2 galactic once you run a container from that.
