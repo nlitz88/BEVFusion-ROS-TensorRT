@@ -248,17 +248,23 @@ mkdir -p bevfusion_ros_ws/src
 	ros2 launch bevfusion bevfusion.launch.py
 	```
 
-## 6. 
-	Now, unless you already have some kind of input source, the node isn't going
-	to publishing anything meaningful. To get a preview of how the model works,
-	you'll likely want to download the [mini-portion of the nuscenes
-	dataset](https://www.nuscenes.org/nuscenes#download), use
-	[nuscenes2rosbag](https://github.com/nlitz88/nuscenes2rosbag) ROS1 package
-	to export specific scenes to a  ROS1 rosbag format (`.bag` file), and then
-	use the [rosbags](https://ternaris.gitlab.io/rosbags/) package to convert
-	the ROS1 bag to a ROS2 bag. Note that the nuscenes2rosbag tool is basically
-	a ROS1 node, and it is probably best if you build and use the docker image
-	that package provides separately from this one!
+## 6. Preparing Input For the BEVFusion Node.
+Now, unless you already have some kind of input source, the node isn't going
+to publishing anything meaningful. To get a preview of how the model works,
+you'll likely want to download the [mini-portion of the nuscenes
+dataset](https://www.nuscenes.org/nuscenes#download), use
+[nuscenes2rosbag](https://github.com/nlitz88/nuscenes2rosbag) ROS1 package
+to export specific scenes to a  ROS1 rosbag format (`.bag` file), and then
+use the [rosbags](https://ternaris.gitlab.io/rosbags/) package to convert
+the ROS1 bag to a ROS2 bag. Note that the nuscenes2rosbag tool is basically
+a ROS1 node, and it is probably best if you build and use the docker image
+that package provides separately from this one!
+
+Alternatively, there are scenes that we have already prepared using the
+process above that you can download [from Google Drive
+here](https://drive.google.com/file/d/1O3EsWIw-_8RWUs8QU9w4mwMPsdiMvmd_/view?usp=sharing).
+
+
 
 ## Additional Notes
 1. If you need an additional terminal within the container, you can run the
