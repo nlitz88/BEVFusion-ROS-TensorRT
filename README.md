@@ -183,7 +183,10 @@ that you don't have to worry about NVIDIA drivers and packages.
 2. Build the Docker image.
 3. Create a new container from the docker image and mount it on a ROS workspace
    folder.
-4. Build your workspace 
+4. Download model weights
+5. Generate TensorRT Engine from model weights
+6. Build your workspace
+7. Run the BEVFusion ROS Node 
 
 ## Steps
 ### 1. Create a new ROS workspace.
@@ -221,9 +224,71 @@ mkdir -p bevfusion_ros_ws/src
    necessary (like `privileged`). I am including them as they have solved
    certain, hard-to-forsee issues I have encountered in the past.*
 
-## 4. Build the ROS Workspace From Within the Container
-1. Once you are dropped into a new shell session within the container, navigate
-   to the workspace folder we mounted when we started the container.
+## 4. Download Model Weights
+***NOTE:** Steps 4 and 5 DO NOT need to be completed more than once.*
+
+Now, before we can build our workspace and get things running, we first have to
+download the weights for the models that BEVFusion relies on. Use the links
+below to download the model files and place them in the `model` directory so
+that it has the directory structure shown below.
+
+[Document Reference](https://github.com/NVIDIA-AI-IOT/Lidar_AI_Solution/tree/master/CUDA-BEVFusion)
+- Download the model ([Google Drive](https://drive.google.com/file/d/1bPt3D07yyVuSuzRAHySZVR2N15RqGHHN/view?usp=sharing)) or ([Baidu Drive](https://pan.baidu.com/s/1_6IJTzKlJ8H62W5cUPiSbA?pwd=g6b4))
+- Download the test dataset ([Google Drive](https://drive.google.com/file/d/1RO493RSWyXbyS12yWk5ZzrixAeZQSnL8/view?usp=sharing)) or ([Baidu Drive](https://pan.baidu.com/s/1ED6eospSIF8oIQ2unU9WIQ?pwd=mtvt))
+
+
+After downloading and unzipping the model, copy it to the `BEVFusion-ROS-TensorRT` directory. The directory structure is as follows:
+
+~~~
+BEVFusion-ROS-TensorRT/model
+.
+├── resnet50
+│   ├── bevfusion-det.pth
+│   ├── camera.backbone.onnx
+│   ├── camera.vtransform.onnx
+│   ├── default.yaml
+│   ├── fuser.onnx
+│   ├── head.bbox.onnx
+│   └── lidar.backbone.xyz.onnx
+├── resnet50int8
+│   ├── bevfusion_ptq.pth
+│   ├── camera.backbone.onnx
+│   ├── camera.vtransform.onnx
+│   ├── default.yaml
+│   ├── fuser.onnx
+│   ├── head.bbox.onnx
+│   └── lidar.backbone.xyz.onnx
+└── swint
+    ├── camera.backbone.onnx
+    ├── camera.vtransform.onnx
+    ├── default.yaml
+    ├── fuser.onnx
+    ├── head.bbox.onnx
+    └── lidar.backbone.xyz.onnx
+~~~
+
+
+## 5. Generate TensorRT Engines from Model Weight Files
+As long as the models are in the directory structure specified above, you should
+now be able to generate TensorRT engine files for each of the backbones you just
+downloaded. To create these:
+
+1. Navigate to the [`tool`](tool/) directory in this repo
+	```
+	cd tool/
+	```
+2. Run the `build_trt_engine.sh` script.
+
+	```
+	source ./build_trt_engine.sh
+	```
+
+If all goes well, you should see a few `plan` files appear--these are the TRT
+engine files.
+
+## 6. Build the ROS Workspace From Within the Container
+1. In the shell session within the container, navigate to the workspace folder
+   we mounted when we started the container.
    ```
    cd /workspace
    ```
@@ -242,13 +307,13 @@ mkdir -p bevfusion_ros_ws/src
 	You can also absolutely just build the entire workspace--we just select
 	bevfusion for the sake of getting started with this package specifically.
 
-## 5. Launch the BEVFusion Node
+## 7. Launch the BEVFusion Node
 1. Use the `bevfusion.launch.py` launch file to run the BEVFusion node:
 	```
 	ros2 launch bevfusion bevfusion.launch.py
 	```
 
-## 6. Preparing Input For the BEVFusion Node.
+## 8. Preparing Input For the BEVFusion Node.
 Now, unless you already have some kind of input source, the node isn't going
 to publishing anything meaningful. To get a preview of how the model works,
 you'll likely want to download the [mini-portion of the nuscenes
@@ -263,8 +328,6 @@ that package provides separately from this one!
 Alternatively, there are scenes that we have already prepared using the
 process above that you can download [from Google Drive
 here](https://drive.google.com/file/d/1O3EsWIw-_8RWUs8QU9w4mwMPsdiMvmd_/view?usp=sharing).
-
-
 
 ## Additional Notes
 1. If you need an additional terminal within the container, you can run the

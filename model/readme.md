@@ -5,10 +5,10 @@
 - Download the test dataset ([Google Drive](https://drive.google.com/file/d/1RO493RSWyXbyS12yWk5ZzrixAeZQSnL8/view?usp=sharing)) or ([Baidu Drive](https://pan.baidu.com/s/1ED6eospSIF8oIQ2unU9WIQ?pwd=mtvt))
 
 
-1. After downloading and unzipping the model, copy it to the `BEVFusion-ROS-TensorRT` directory. The directory structure is as follows:
+After downloading and unzipping the model, copy it to the `BEVFusion-ROS-TensorRT` directory. The directory structure is as follows:
 
 ~~~
-(base) lin@PC:src/BEVFusion-ROS-TensorRT/model$ tree
+BEVFusion-ROS-TensorRT/model
 .
 ├── resnet50
 │   ├── bevfusion-det.pth
