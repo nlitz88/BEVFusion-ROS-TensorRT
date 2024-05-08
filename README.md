@@ -207,6 +207,7 @@ mkdir -p bevfusion_ros_ws/src
 	cd BEVFusion-ROS-TensorRT/docker
 	docker build -t bevfusion_ros .
 	```
+   _FULL DISCLOSURE: I ran out of time at the end of the semester and just threw this Dockerfile together real quick without testing it. If this doesn't build correctly or install everything correctly, if you're just looking to get started, use the PyTorch base image specified in the Dockerfile. Run a container from that image and install ROS2 galactic within there. If you fix the dockerfile, create an issue and maybe we can merge into into the `ros2-galactic` branch._
 
 ## 3. Run a Container From the Image
 1. Run the docker container using the `rocker` command line with the workspace
